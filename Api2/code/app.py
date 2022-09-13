@@ -10,13 +10,21 @@ items =[]
 
 class Item(Resource):
     def get(self, name):
-        for item in items:
-            if item['name'] == name:
-                return item
-        return {'item': None}, 404
+        # next give us the first match, it ll break the program if tehre are no match. This is why we use None
+        item = next(filter(lambda item: item['name'] == name, items), None) # if it finds the match it ll return it
+        # for item in items:
+        #     if item['name'] == name:
+        #         return item
+        # return {'item': None}, 404
+        # return {'item': item}, 200 if item is not None else 404
+        return {'item': item}, 200 if item else 404
     
 
     def post(self,name):
+
+        #is not none can be ommited because it is a default
+        if next(filter(lambda item: item['name'] == name, items), None) is not None:
+            return {'message': "an item with the name: {} already exists".format(name)}, 400 # 400 is a bad request becaue it supposed to be solved on the clinets side
         # If the request doesn't attach the json payload or the request doesnt have the proper Content-type header request.get_json() ll give an error
         # force=True means we don't need content type header
         #data ll be a dictionary 
