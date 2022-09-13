@@ -24,6 +24,12 @@ class Item(Resource):
 
     def post(self, name):
 
+        parser = reqparse.RequestParser()
+        parser.add_argument('price',
+            type = float,
+            required = True,
+            help = ' This field cannot be blank '
+        )
         #is not none can be ommited because it is a default
         if next(filter(lambda item: item['name'] == name, items), None) is not None:
             return {'message': "an item with the name: {} already exists".format(name)}, 400 # 400 is a bad request becaue it supposed to be solved on the clinets side
