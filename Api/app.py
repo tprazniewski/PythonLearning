@@ -45,7 +45,7 @@ def get_store(name):
 def create_item_in_store(name):
     request_data = request.get_json()
     for store in stores:
-        if(store['name'] == name):
+        if store['name'] == name:
             new_item = {
                 'name': request_data['name'],
                 'price': request_data['price']
