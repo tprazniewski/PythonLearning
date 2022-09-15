@@ -8,26 +8,13 @@ class User:
         self.user = user
         self.password = password
     
-    # def find_by_username(self, username):
-    #     connection = sqlite3.connect('data.db')
-    #     cursor = connection.cursor() # is required to run a commands
-
-    #     query = "SELECT * from users WHERE username=?"
-    #     result = cursor.execution(query, (username),) # the parameters need to be in a forme of tupples in this case one argument this si the reason wh ywe have a comma
-    #     row = result.fetchone()
-    #     if row:
-    #         user = User(row[0], row[1], row[2])
-    #     else:
-    #         user = None
-    #     connection.close()
-    #     return user
     @classmethod
     def find_by_username(cls, username):
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor() # is required to run a commands
 
         query = "SELECT * from users WHERE username=?"
-        result = cursor.execution(query, (username),) # the parameters need to be in a forme of tupples in this case one argument this si the reason wh ywe have a comma
+        result = cursor.execute(query, (username,)) # the parameters need to be in a forme of tupples in this case one argument this si the reason wh ywe have a comma
         row = result.fetchone()
         if row:
             # user = cls(row[0], row[1], row[2])
@@ -35,7 +22,7 @@ class User:
         else:
             user = None
         connection.close()
-        return user
+        return user 
 
     @classmethod
     def find_by_id(cls, _id):
@@ -43,7 +30,7 @@ class User:
         cursor = connection.cursor() # is required to run a commands
 
         query = "SELECT * from users WHERE id=?"
-        result = cursor.execution(query, (_id),) # the parameters need to be in a forme of tupples in this case one argument this si the reason wh ywe have a comma
+        result = cursor.execute(query, (_id),) # the parameters need to be in a forme of tupples in this case one argument this si the reason wh ywe have a comma
         row = result.fetchone()
         if row:
             # user = cls(row[0], row[1], row[2])
@@ -68,7 +55,13 @@ class UserRegister(Resource):
     )
 
     def post(self):
+        # get the data form the json payload
+        #{'username': 'Robcio', 'password': 'efgh'}
         data = UserRegister.parser.parse_args()
+        # print(User.find_by_username(data['username']))
+        if User.find_by_username(data['username']):
+            return {"message": " A user with username already exists"}, 400
+            # if we return we dont run the stuff below
 
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
