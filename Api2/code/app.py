@@ -14,4 +14,6 @@ api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
 api.add_resource(UserRegister, '/register')
 
-app.run(port=5000, debug = True)
+# If we import this file to another file this won't be triggered , python asign __main__ to a current file name read: __name__ only when we trigger the app from terminal for example using python3 app.py
+if __name__ == '__main__':
+    app.run(port=5000, debug = True)
