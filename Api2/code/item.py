@@ -84,9 +84,19 @@ class Item(Resource):
         # return item, 201
     
     def delete(self, name):
-        global items
-        items = list(filter(lambda item: item['name'] !=name, items))
-        return {'message': 'item deleted'}
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "DELETE FROM items WHERE name=?"
+        cursor.execute(query,(name,))#the name is a tupple so reemmebr to have a coma if its a single value tupple
+
+        connection.commit()
+        connection.close()
+
+        return { 'message': " Item deleted"}
+        # global items
+        # items = list(filter(lambda item: item['name'] !=name, items))
+        # return {'message': 'item deleted'}
     
     def put(self, name):
         parser = reqparse.RequestParser()
